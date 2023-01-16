@@ -83,7 +83,7 @@ class Response
         $this->urlTest = $urlTest;
         $this->triggeredEvents = $triggeredEvents;
         
-        if (is_resource($curl) || $curlOrGuzzle instanceof \CurlHandle) {
+        if (is_resource($curl) || $curl instanceof \CurlHandle) {
             $this->time = $time;
             $this->numConnects = curl_getinfo($curl, CURLINFO_NUM_CONNECTS);
             $this->contentType = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
@@ -96,7 +96,7 @@ class Response
             $this->headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 
             if (!empty($response)) {
-                $this->code = curl_getinfo($curlOrGuzzle, CURLINFO_RESPONSE_CODE);
+                $this->code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
                 $this->size = strlen($response);
 
                 if ($this->headerSize > 0) {
