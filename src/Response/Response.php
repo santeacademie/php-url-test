@@ -27,7 +27,7 @@ class Response
     protected $connectTime;
 
     /** @var ?int */
-    protected $preTranferTtime;
+    protected $preTranferTime;
 
     /** @var ?int */
     protected $startTranferTime;
@@ -40,6 +40,9 @@ class Response
 
     /** @var ?int */
     protected $redirectTime;
+
+    /** @var ?string */
+    protected $redirectUrl;
 
     /** @var ?int */
     protected $url;
@@ -79,25 +82,30 @@ class Response
     ) {
         $this->urlTest = $urlTest;
         $this->triggeredEvents = $triggeredEvents;
-        if (is_resource($curl)) {
+        
+        if (is_resource($curl) || $curlOrGuzzle instanceof \CurlHandle) {
             $this->time = $time;
-            $this->code = curl_getinfo($curl, CURLINFO_RESPONSE_CODE);
             $this->numConnects = curl_getinfo($curl, CURLINFO_NUM_CONNECTS);
-            $this->size = strlen($response ?? '');
             $this->contentType = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
             $this->connectTime = curl_getinfo($curl, CURLINFO_CONNECT_TIME);
-            $this->preTranferTtime = curl_getinfo($curl, CURLINFO_PRETRANSFER_TIME);
+            $this->preTranferTime = curl_getinfo($curl, CURLINFO_PRETRANSFER_TIME);
             $this->startTranferTime = curl_getinfo($curl, CURLINFO_STARTTRANSFER_TIME);
             $this->url = curl_getinfo($curl, CURLINFO_EFFECTIVE_URL);
             $this->redirectCount = curl_getinfo($curl, CURLINFO_REDIRECT_COUNT);
             $this->redirectTime = curl_getinfo($curl, CURLINFO_REDIRECT_TIME);
             $this->headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
-            if ($this->headerSize > 0) {
-                $this->defineHeaders(substr($response, 0, $this->headerSize));
-            }
-            if (is_string($response) === true) {
-                $this->body = substr($response, $this->headerSize);
-                $this->bodySize = strlen($this->body);
+
+            if (!empty($response)) {
+                $this->code = curl_getinfo($curlOrGuzzle, CURLINFO_RESPONSE_CODE);
+                $this->size = strlen($response);
+
+                if ($this->headerSize > 0) {
+                    $this->defineHeaders(substr($response, 0, $this->headerSize));
+                }
+                if (is_string($response) === true) {
+                    $this->body = substr($response, $this->headerSize);
+                    $this->bodySize = strlen($this->body);
+                }
             }
         }
         $this->errorCode = $errorCode;
@@ -129,9 +137,9 @@ class Response
         return $this->connectTime;
     }
 
-    public function getPreTranferTtime(): ?int
+    public function getPreTranferTime(): ?int
     {
-        return $this->preTranferTtime;
+        return $this->preTranferTime;
     }
 
     public function getStartTranferTime(): ?int
@@ -152,6 +160,11 @@ class Response
     public function getRedirectTime(): ?int
     {
         return $this->redirectTime;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return $this->redirectUrl;
     }
 
     public function getUrl(): ?string
