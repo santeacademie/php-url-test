@@ -12,8 +12,8 @@ class Response
     /** @var ?int */
     protected $url;
 
-    /** @var ?int */
-    protected $code;
+    /** @var null|int|string */
+    protected null|int|string $code;
 
     /** @var ?int */
     protected $numConnects;
@@ -63,6 +63,7 @@ class Response
     public function __construct(Configuration $configuration)
     {
         $this->configuration = $configuration;
+        $this->code = null;
     }
 
     public function setUrl(?string $url): self
@@ -76,15 +77,15 @@ class Response
     {
         return $this->url;
     }
-
-    public function setCode(?int $code): self
+    
+    public function setCode(null|int|string $code): self
     {
         $this->code = $code;
 
         return $this;
     }
 
-    public function getCode(): ?int
+    public function getCode(): null|int|string
     {
         return $this->code;
     }
