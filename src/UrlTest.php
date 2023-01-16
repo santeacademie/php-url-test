@@ -169,7 +169,7 @@ class UrlTest
             $expectedResponse = $this->getConfiguration()->getResponse();
             $this->valid = true;
             $this->compare($expectedResponse->getUrl(), $this->getResponse()->getUrl());
-            $this->compare($expectedResponse->getCode(), $this->getResponse()->getCode());
+            $this->compare($expectedResponse->getCode(), $this->getResponse()->getCode(), true);
             $this->compare($expectedResponse->getNumConnects(), $this->getResponse()->getNumConnects());
             $this->compare($expectedResponse->getSize(), $this->getResponse()->getSize());
             $this->compare($expectedResponse->getContentType(), $this->getResponse()->getContentType());
@@ -257,10 +257,18 @@ class UrlTest
         return $this;
     }
 
-    protected function compare($expected, $value): self
+    protected function compare($expected, $value, $regexMode = false): self
     {
-        if ($expected !== null && $expected !== $value) {
-            $this->valid = false;
+        if ($expected !== null) {
+            if ($regexMode) {
+                if (!preg_match('#'.strval($expected).'#', strval($value))) {
+                    $this->valid = false;
+                }
+            } else {
+                if ($expected !== $value) {
+                    $this->valid = false;
+                }
+            }
         }
 
         return $this;
