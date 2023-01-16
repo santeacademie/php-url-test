@@ -49,7 +49,7 @@ class Configuration
         $return
             ->getResponse()
             ->setUrl(static::replaceParameters($configuration['expectedResponse']['url'], $parameters))
-            ->setCode(static::replaceIntParameters($configuration['expectedResponse']['code'], $parameters))
+            ->setCode(static::replaceParameters($configuration['expectedResponse']['code'], $parameters))
             ->setSize(static::replaceIntParameters($configuration['expectedResponse']['size'], $parameters))
             ->setContentType(
                 static::replaceParameters($configuration['expectedResponse']['contentType'], $parameters)
@@ -102,6 +102,11 @@ class Configuration
     protected static function replaceParameters($data, array $parameters)
     {
         $return = $data;
+
+        if (!is_array($data) && !is_string($data)) {
+            return $return;
+        }
+
         if ($data !== null) {
             foreach ($parameters as $name => $value) {
                 if (is_array($data)) {
