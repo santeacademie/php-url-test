@@ -81,6 +81,10 @@ class UrlTestService
         foreach ($configurations['imports'] ?? [] as $import) {
             $this->addConfigurationFile(dirname($fileName) . DIRECTORY_SEPARATOR . $import['resource']);
         }
+        
+        foreach ($configurations['parameters'] ?? [] as $name => $value) {
+            $this->addParameter($name, $value);
+        }
 
         foreach ($configurations['urltest'] ?? [] as $id => $configuration) {
             // parenthesis for a phpcs bug who interpret it as yoda condition
@@ -89,10 +93,6 @@ class UrlTestService
             } else {
                 $this->addTest($id, new UrlTest($id, $this->createConfiguration($configuration, $fileName, $id)));
             }
-        }
-
-        foreach ($configurations['parameters'] ?? [] as $name => $value) {
-            $this->addParameter($name, $value);
         }
 
         return $this;
