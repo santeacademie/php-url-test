@@ -84,7 +84,8 @@ class ConsoleResultReader implements ResultReaderInterface
                         )
                         ->writeBodyDiff($urlTest, $verbosity)
                         ->writeRedirectionDiff($urlTest, $verbosity)
-                        ->writeRedirectionCountDiff($urlTest, $verbosity);
+                        ->writeRedirectionCountDiff($urlTest, $verbosity)
+                        ->writeCurlErrors($urlTest, $verbosity);
                 }
             }
         }
@@ -104,13 +105,27 @@ class ConsoleResultReader implements ResultReaderInterface
                     $this->writeOkValue('none');
                 }
                 echo "\n";
-            } elseif ($verbosity >= ResultReaderService::VERBOSITY_VERBOSE) {
+            } else {
                 echo 'Redirection: ';
                 echo ($urlTest->getResponse()->getRedirectCount() === 0)
                     ? 'none' :
                     $urlTest->getResponse()->getRedirectCount();
                 echo "\n";
             }
+        }
+
+        return $this;
+    }
+
+    protected function writeCurlErrors(UrlTest $urlTest, int $verbosity): self
+    {
+        if ($verbosity >= ResultReaderService::VERBOSITY_VERBOSE && !empty($urlTest->getResponse()->getErrorMessage())) {
+            echo sprintf(
+                'Client error: [%s] %s',
+                $urlTest->getResponse()->getErrorCode() ?? '-',
+                $urlTest->getResponse()->getErrorMessage() ?? '-'
+            );
+            echo "\n";
         }
 
         return $this;
@@ -156,6 +171,10 @@ class ConsoleResultReader implements ResultReaderInterface
                 echo "\n";
             } elseif ($verbosity >= ResultReaderService::VERBOSITY_VERY_VERBOSE) {
                 echo 'Redirections count: ' . $urlTest->getResponse()->getRedirectCount() . "\n";
+            }
+
+            if ($urlTest->getResponse()->getRedirectUrl() !== null) {
+                echo 'Redirect URL: ' . $urlTest->getResponse()->getRedirectUrl() . "\n";
             }
         }
 
