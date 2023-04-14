@@ -87,6 +87,7 @@ class Response
             $this->time = $time;
             $this->numConnects = curl_getinfo($curl, CURLINFO_NUM_CONNECTS);
             $this->contentType = curl_getinfo($curl, CURLINFO_CONTENT_TYPE);
+            $this->contentType = $this->contentType === false ? '' : $this->contentType;
             $this->connectTime = curl_getinfo($curl, CURLINFO_CONNECT_TIME);
             $this->preTranferTime = curl_getinfo($curl, CURLINFO_PRETRANSFER_TIME);
             $this->startTranferTime = curl_getinfo($curl, CURLINFO_STARTTRANSFER_TIME);
