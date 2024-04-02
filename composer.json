@@ -23,5 +23,11 @@
     "bin": ["bin/urltest"],
     "require-dev": {
         "symfony/var-dumper": "^4.0"
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://composer-satis.santeacademie.com"
+        }
+    ]
 }
