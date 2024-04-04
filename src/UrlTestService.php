@@ -41,12 +41,6 @@ class UrlTestService
     /** @var int */
     protected $parallelVerbosity = 0;
 
-    /** @var ?string */
-    protected $parallelResponseComparator;
-
-    /** @var ?string */
-    protected $parallelResponseErrorComparator;
-
     /** @var bool */
     protected $stopOnError = false;
 
@@ -472,30 +466,6 @@ class UrlTestService
         return $this;
     }
 
-    public function setParallelResponseComparator(?string $parallelResponseComparator): self
-    {
-        $this->parallelResponseComparator = $parallelResponseComparator;
-
-        return $this;
-    }
-
-    public function getParallelResponseComparator(): ?string
-    {
-        return $this->parallelResponseComparator;
-    }
-
-    public function setParallelResponseErrorComparator(?string $parallelResponseErrorComparator): self
-    {
-        $this->parallelResponseErrorComparator = $parallelResponseErrorComparator;
-
-        return $this;
-    }
-
-    public function getParallelResponseErrorComparator(): ?string
-    {
-        return $this->parallelResponseErrorComparator;
-    }
-
     /** @param string[]|null $ids UrlTest identifiers string or preg pattern to retrieve */
     public function executeTests(array $ids = null): bool
     {
@@ -686,12 +656,6 @@ class UrlTestService
     protected function getParallelCommand(UrlTest $urlTest, string $configurationFileName): string
     {
         $return = 'php ' . $this->getUrlTestBinPath() . ' --progress=false ';
-        if ($this->getParallelResponseComparator() !== null) {
-            $return .= '--comparator=' . $this->getParallelResponseComparator() . ' ';
-        }
-        if ($this->getParallelResponseErrorComparator() !== null) {
-            $return .= '--errorcomparator=' . $this->getParallelResponseErrorComparator() . ' ';
-        }
         if ($this->getParallelVerbosity() > 0) {
             $return .= '-' . str_repeat('v', $this->getParallelVerbosity()) . ' ';
         }
@@ -709,7 +673,7 @@ class UrlTestService
 
     protected function getUrlTestBinPath(): string
     {
-        return __DIR__ . '/bin/urltest';
+        return __DIR__ . '/../bin/urltest';
     }
 
     protected function saveContinueData(UrlTest $current): self

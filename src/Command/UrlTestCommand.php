@@ -92,8 +92,6 @@ class UrlTestCommand extends Command
         if ($input->getOption('parallel') > 1) {
             $service
                 ->setParallelNumber((int) $input->getOption('parallel'))
-                ->setParallelResponseComparator($input->getOption('comparator'))
-                ->setParallelResponseErrorComparator($input->getOption('errorcomparator'))
                 ->setParallelVerbosity($this->getVerbosity($output));
         }
 
@@ -183,7 +181,7 @@ class UrlTestCommand extends Command
     protected function showParallelResponses(array $urlTests, OutputInterface $output): self
     {
         foreach ($urlTests as $urlTest) {
-            $output->write($urlTest->getParallelResponse());
+            $output->write($urlTest->getParallelResponse() ?? '');
         }
 
         return $this;
