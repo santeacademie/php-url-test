@@ -9,7 +9,7 @@ trait CreateUrlTestServiceTrait
     protected function createUrlTestService(
         string $path,
         bool $recursive,
-        string $configurationFileName = null
+        ?string $configurationFileName = null
     ): UrlTestService {
         $return = new UrlTestService();
 

@@ -25,7 +25,7 @@ class ConsoleConfigurationDumper
         $this->output = $output;
     }
 
-    public function dumpConfiguration(UrlTestService $urlTestService, array $ids = null): self
+    public function dumpConfiguration(UrlTestService $urlTestService, ?array $ids = null): self
     {
         $this
             ->dumpConfigurationFiles($urlTestService)
@@ -255,7 +255,7 @@ class ConsoleConfigurationDumper
         return $this;
     }
 
-    protected function dumpTestsCount(UrlTestService $urlTestService, array $ids = null): self
+    protected function dumpTestsCount(UrlTestService $urlTestService, ?array $ids = null): self
     {
         $this->writeHeader('UrlTests', true);
 

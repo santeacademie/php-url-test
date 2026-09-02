@@ -20,7 +20,7 @@ class ExportConfigurationCommand extends Command
 {
     use CreateUrlTestServiceTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -32,7 +32,7 @@ class ExportConfigurationCommand extends Command
             ->addOption('recursive', 'r', InputOption::VALUE_OPTIONAL, 'Set recursive if path is a directory.', 'true');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $service = $this->createUrlTestService(
             $input->getArgument('path'),
