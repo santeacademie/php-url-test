@@ -13,13 +13,13 @@ class Parser extends SymfonyYamlParser
 
     public static function registerFileFunction(?string $path = null): void
     {
-        self::$functions['file'] = static function (string $fileName) use ($path): string {
+        static::$functions['file'] = static function (string $fileName) use ($path): string {
             $basePath = $path === null ? __DIR__ : rtrim($path, DIRECTORY_SEPARATOR);
             $filePath = str_starts_with($fileName, DIRECTORY_SEPARATOR)
                 ? $fileName
                 : $basePath . DIRECTORY_SEPARATOR . $fileName;
 
-            if (!is_readable($filePath)) {
+            if (is_readable($filePath) === false) {
                 throw new \RuntimeException(sprintf('File "%s" not found.', $filePath));
             }
 
@@ -59,7 +59,7 @@ class Parser extends SymfonyYamlParser
         $parameters = [];
 
         foreach (token_get_all('<?php ' . $expression) as $token) {
-            if (!is_array($token)) {
+            if (is_array($token) === false) {
                 continue;
             }
 
@@ -78,10 +78,10 @@ class Parser extends SymfonyYamlParser
             throw new \RuntimeException(sprintf('Function name cannot be found in %s.', $expression));
         }
 
-        if (!isset(self::$functions[$functionId])) {
+        if (isset(static::$functions[$functionId]) === false) {
             throw new \RuntimeException(sprintf('Function "%s" not found.', $functionId));
         }
 
-        return (self::$functions[$functionId])(...$parameters);
+        return (static::$functions[$functionId])(...$parameters);
     }
 }
