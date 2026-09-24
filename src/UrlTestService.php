@@ -7,9 +7,9 @@ namespace steevanb\PhpUrlTest;
 use Symfony\Component\Console\Output\OutputInterface;
 use steevanb\PhpUrlTest\{
     Configuration\Exporter\YamlExporter,
-    Configuration\Configuration
+    Configuration\Configuration,
+    Yaml\Parser
 };
-use steevanb\PhpYaml\Parser;
 use Symfony\Component\Filesystem\Filesystem;
 
 class UrlTestService
@@ -213,7 +213,7 @@ class UrlTestService
      * @param string[]|null $ids UrlTest identifiers string or preg pattern to retrieve
      * @return UrlTest[]
      */
-    public function getTests(array $ids = null, bool $skipSkipped = true): array
+    public function getTests(?array $ids = null, bool $skipSkipped = true): array
     {
         $return = [];
         $skipped = ($skipSkipped) ? $this->getSkippedTests() : [];
@@ -297,7 +297,7 @@ class UrlTestService
     }
 
     /** @param string[]|null $ids UrlTest identifiers string or preg pattern to retrieve */
-    public function countTests(array $ids = null): int
+    public function countTests(?array $ids = null): int
     {
         return count($this->getTests($ids));
     }
@@ -345,7 +345,7 @@ class UrlTestService
     }
 
     /** @param string[]|null $ids UrlTest identifiers string or preg pattern to retrieve */
-    public function isAllTestsExecuted(array $ids = null): bool
+    public function isAllTestsExecuted(?array $ids = null): bool
     {
         $return = true;
         foreach ($this->getTests($ids) as $urlTest) {
@@ -467,7 +467,7 @@ class UrlTestService
     }
 
     /** @param string[]|null $ids UrlTest identifiers string or preg pattern to retrieve */
-    public function executeTests(array $ids = null): bool
+    public function executeTests(?array $ids = null): bool
     {
         $continueFilePath = $this->getContinueFilePath();
         if (is_dir(dirname($continueFilePath)) === false) {
@@ -548,7 +548,7 @@ class UrlTestService
         return $return;
     }
 
-    protected function executeSequentialTests(array $ids = null): bool
+    protected function executeSequentialTests(?array $ids = null): bool
     {
         $return = true;
         foreach ($this->getTests($ids) as $urlTest) {
@@ -579,7 +579,7 @@ class UrlTestService
         return $return;
     }
 
-    protected function executeParallelTests(array $ids = null): bool
+    protected function executeParallelTests(?array $ids = null): bool
     {
         $return = true;
         $tests = $this->getTests($ids);

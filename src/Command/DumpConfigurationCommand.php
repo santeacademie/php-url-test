@@ -20,7 +20,7 @@ class DumpConfigurationCommand extends Command
 {
     use CreateUrlTestServiceTrait;
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -37,7 +37,7 @@ class DumpConfigurationCommand extends Command
             ->addArgument('ids', InputArgument::OPTIONAL, 'UrlTest identifiers preg pattern to test.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $ids = $input->getArgument('ids') === null ? null : explode(',', $input->getArgument('ids'));
         $urlTestService = $this->createUrlTestService(
